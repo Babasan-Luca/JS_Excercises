@@ -1,0 +1,281 @@
+/*
+//10 p
+1. Write a function to split a string to return a list of objects describing students. Parsing "Igor-m-10,Ileana-f-8,Igor-m-8,George-m-8" should create the list:
+[{ "name":"Igor", "sex":"m", age":10}, {"name":"Ileana", "sex":"f", "age":8}, {"name":"Igor", "sex":"m", age":8} {"name":"George", "sex":"m", "age":8}]
+*/
+//Solution to ex 1.
+var leString = "Igor-m-10,Ileana-f-8,Igor-m-8,George-m-8,Ana-f-12,Ivan-m-14,Iava-f-11"
+var childrenList = [];
+function orderStr(str) {
+	var arr = str.split(",")
+	var students = []
+	for (var i = 0; i < arr.length; i++) {
+		students.push(arr[i].split("-"))
+	}
+	for (j = 0; j < students.length; j++) {
+		var bigObj = {};
+		bigObj["name"] = students[j][0]
+		bigObj["gender"] = students[j][1]
+		bigObj["age"] = students[j][2];
+		childrenList.push(bigObj)
+	}
+} orderStr(leString);
+console.log(childrenList);
+
+
+/*
+10 p
+2. Write functions which compute statistics from the list of objects created at point 1, and print them like this:
+- how many children have each name
+function countNames(list) - would print "Igor:2, Ileana:1, George:1"
+- how many children are boys and how many girls:
+function countGender(list) - would print "m:3, f:1"
+- how many children have each age:
+function countAges(list) - would print "10:1, 8:3"
+- what is the average age of the children
+function computeAverage(list) would print "8.5"  ((10 + 3*8) / 4 = 8.5)
+*/
+//////////////////////////
+//Solution to ex 2.
+function _defineProperty(obj, key, value) {
+	if (key in obj) {
+		Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });
+	} else {
+		obj[key] = value;
+	} return obj;
+}
+/////////////////////////
+var countProp = function count(names) {
+	return names.reduce(function (a, b) {
+		return Object.assign(a, _defineProperty({}, b, (a[b] || 0) + 1));
+	}, {});
+};
+//////////////////////////
+var childrenNamesCount = [];
+var childrenGenderCount = []
+var childrenAgeCount = []
+var sum = 0;
+var averege = 0
+//childrenList Defined above in ex 1.
+for (var i = 0; i < childrenList.length; i++) {
+	var childName = childrenList[i].name;
+	var childGender = childrenList[i].gender;
+	var childAge = childrenList[i].age;
+	sum += parseInt(childrenList[i].age, 10);
+	averege = sum / childrenList.length
+	childrenNamesCount.push(childName);
+	childrenGenderCount.push(childGender);
+	childrenAgeCount.push(childAge);
+
+}
+console.log(countProp(childrenNamesCount))
+console.log(countProp(childrenGenderCount))
+console.log("The averege age is: " + averege.toFixed(3))
+
+/*
+10 p
+3. Given a string that does not contain numbers, shorten it by writing that symbol and how many times it appears consecutively.
+ When a symbol appears only once do not write the number 1. For example:
+"cccc" result in "c4"
+"abcd" results in "abcd"
+"aaabbcaaaaa" results in "a3b2ca5".
+*/
+//Solution to ex 3.
+
+function letterRepeat(str) {
+	var temp = "";
+	var shortened = "";
+	var count = 0;
+	for (var i = 0; i < str.length; i++) {
+		count++;
+		if (str[i] != str[i + 1]) {
+			temp += str[i] + count;
+			count = 0
+			shortened = temp.split("1")
+			shortened = shortened.join("")
+		}
+	}
+	console.log(shortened);
+};
+letterRepeat("aaabbcaaaaa")
+
+/*
+15p
+4. Write a JavaScript function that receives a property name {String} and JSON object
+and returns the associated value if the property can be found, or null otherwise
+If the property is not found at the top-level of the provided JSON,
+then the function should recurse over its children in the following manner:
+If the child is a JSON object, then the function should try to find the provided property
+inside that JSON
+If the child is an array, then the function should try to find the provided property
+by iterating over all the elements of the array
+If the child is anything else, the search should stop for that particular node
+*/
+
+
+// For example
+var exampleObject = {
+	"key0": 42,
+	"key1": {
+		"key2": [
+			{
+				"key3": "lol",
+				"key4": false
+			},
+			{
+				"key5": null,
+				"key6": [3, 141]
+			}
+		],
+		"key7": null
+	}
+};
+//WIP!, not functional yet//
+var body = '';
+function scan(key, obj) {
+	var k;
+	if (obj instanceof Object) {
+		for (k in obj) {
+			if (obj.hasOwnProperty(k)) {
+				body = body + k
+				scan(obj[k]);
+			}
+		}
+	} else {
+		body = body + ' found value : ' + obj;
+	};
+
+};
+
+scan(exampleObject);
+
+// function returnValueAtProperty(key, object) {
+// 	return object.filter(
+// 		function (key) { return object.key == key }
+// 	)
+// }
+// var match = returnValueAtProperty("key1", exampleObject)
+
+
+// returnValueAtProperty("key0", exampleObject) === 42;
+// returnValueAtProperty("key3", exampleObject) === "lol";
+// returnValueAtProperty("key6", exampleObject) === [3, 141];
+
+
+
+
+/*
+55 p
+5. Try to implement the functions for which signatures have been provided, as detailed in the instructions.
+If you can't find the solution for implementing a certain function you are still allowed to use that
+function (as if it were properly implemented) in order to implement other functions that depend on it.
+*/
+
+/*
+ * Gameloft is opening a furniture shop and already has Orders which need to be processed.
+ *
+ * The goals of this problem are to:
+ * 1. Parse OrdersString into an array of Order objects (details below) containing the types and quantities of furniture requested
+ * Example: OrderString -> [Order], [Order] stands for array of Order objects
+ * Parsing "Tables-5,Beds-3;Tables-4,Chairs-2" will result in an array containing 2 Order objects, the first with 5 Tables and 3 Beds and the second with 4 Tables and 2 Chairs
+ * 2. Parse StockString into a Stock object containing available furniture stored
+ * 3. Iterate the array of Orders and check which can be delivered given the available Stock
+ * 4. Collect into another array the Orders which could not be completed and merge them into a single Order, with the total furniture required to complete them
+ * 5. Log the uncompleted Orders, the merged Order with the total furniture, and the remaining Stock
+ *
+ * This problem is best solved with JavaScript Objects and the prototype mechanism. The function signatures you will need have already been provided below, along with instructions
+ * for what each needs to do.
+ */
+//codehere
+
+/*
+ * The Orders are stored in a string called "OrdersString", and the Stock of furniture is stored in a string called "StockString". (below)
+ * - Orders are separated by the ";" character
+ * - Furniture types are separated by the "," character
+ * - Furniture type and Quantity are separated by the "-" character
+ */
+//codehere
+// var OrdersString = "Tables-5,Chairs-3,Beds-2;Tables-2,Chairs-5;Tables-3,Chairs-2,Beds-10;Tables-1,Beds-2;Chairs-8,Beds-2"
+// var StockString = "Tables-15,Chairs-15,Beds-8"
+
+/*
+ * Create the Order object, which has:
+ * 1. the constructor, which takes the string representation of an Order ("Tables-1,Chairs2,Beds-3" for example) and adds the different
+ *  furniture types along with their respective quantities into the object
+ * 2. the method "addFurniture", which takes pairs of (Furniture (String) - Quantity (Number)) and adds them to the object
+ * 3. the method "mergeOrders", which takes another Order and results in an Order containing the total Furniture of each type for both Orders
+ * Example: orderA has 5 Tables and 2 Chairs, orderB has 2 Tables and 1 Chair; orderA.merge(orderB) -> orderA containing 7 Tables and 3 Chairs
+ * Hint: mergeOrders is needed later in the test, you can skip implementing it at first.
+ */
+// function Order (OrdersString){
+// }
+
+// function Order(orderString){
+// 	var indivOrder = orderString.split(';')
+// 	console.log(indivOrder);
+// }
+
+// Order.prototype.addFurniture = function(furniture, count) {
+// }
+
+// Order.prototype.mergeOrders = function(otherOrder) {
+// }
+
+
+
+/* Create a Stock object, which has:
+ * 1. the constructor, which parses a stock string representation into pairs of (Furniture (String) - Quantity (Number)) which will represent the furniture available for processing orders
+ * 1. the method "hasEnoughFurniture", which takes an Order object, and returns true if there is enough furniture to complete the entire Order, or false otherwise
+ * 2. the method "deliverFurniture", which takes an Order object, and subtracts the amount of furniture the Order needs from the available Stock ONLY if enough is available
+ */
+//codehere
+/*
+function Stock(stockString) {
+}
+
+Stock.prototype.hasEnoughFurniture = function(order) {
+}
+
+Stock.prototype.deliverFurniture = function(order) {
+}
+*/
+//codehere
+
+/* Create a FurnitureShop object, which has:
+ * 1. the method "ordersStringToOrdersArray" which parses "OrdersString" into an "orders" array of Order objects
+ * 2. the method "stockStringToStock" which parses "StockString" into a "stock" object
+ * 3. the method "processOrders" which goes through each Order, completes it, reducing the furniture in Stock (only if all the furniture in that Order can be delivered)
+ * , and returns an array "remainingOrders" which have not been completed
+ * 4. the method "mergeRemainingOrdersIntoRequiredStock" which merges all uncompleted Orders from processOrders, creating a new Order object with the total amount of Furniture that the FurnitureShop needs, called "requiredStock"
+ * At the end of the script, the original orders, remaining orders, remaining stock and required stock are logged.
+ */
+
+//codehere
+
+/*
+function FurnitureShop() {
+}
+
+FurnitureShop.prototype.ordersStringToOrdersArray = function(ordersString) {
+}
+
+FurnitureShop.prototype.stockStringToStock = function(stockString) {
+}
+
+FurnitureShop.prototype.processOrders = function(ordersArray, stock) {
+}
+
+FurnitureShop.prototype.mergeRemainingOrdersIntoRequiredStock = function(remainingOrders) {
+}
+
+var shop = new FurnitureShop()
+shop.ordersStringToOrdersArray(OrdersString)
+shop.stockStringToStock(StockString)
+shop.processOrders(shop.orders, shop.stock)
+shop.mergeRemainingOrdersIntoRequiredStock(shop.remainingOrders)
+
+Log('Original orders: ' + JSON.stringify(shop.orders))
+Log('Remaining orders: ' + JSON.stringify(shop.remainingOrders))
+Log('Required stock: ' + JSON.stringify(shop.requiredStock))
+Log('Remaining stock: ' + JSON.stringify(shop.stock))
+*/
