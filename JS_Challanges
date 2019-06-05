@@ -127,43 +127,60 @@ var exampleObject = {
 				"key6": [3, 141]
 			}
 		],
-		"key7": null
+		"key7": null,
+		"key8": [
+			{
+				"key9": "hallo",
+				"key10": {
+					"key11": "world",
+					"key12": "Mike",
+					"key13": {
+						"key14": 83,
+						"key15": "Obi-Wan",
+						"key16": [233, 486, 637]
+
+					}
+				}
+			}
+		]
 	}
 };
-//WIP!, not functional yet//
-var body = '';
-function scan(key, obj) {
-	var k;
-	if (obj instanceof Object) {
-		for (k in obj) {
-			if (obj.hasOwnProperty(k)) {
-				body = body + k
-				scan(obj[k]);
-			}
-		}
-	} else {
-		body = body + ' found value : ' + obj;
-	};
-
-};
-
-scan(exampleObject);
-
+//Creator examples:
 // function returnValueAtProperty(key, object) {
-// 	return object.filter(
-// 		function (key) { return object.key == key }
-// 	)
-// }
-// var match = returnValueAtProperty("key1", exampleObject)
-
 
 // returnValueAtProperty("key0", exampleObject) === 42;
 // returnValueAtProperty("key3", exampleObject) === "lol";
 // returnValueAtProperty("key6", exampleObject) === [3, 141];
 
+//Solution to ex 4.
+
+function findKeys(obj, key) {
+	let list = [];
+	var i;
+	if (!obj)
+		return list;
+	if (obj instanceof Array) {
+		for (i in obj) {
+			list = list.concat(this.findKeys(obj[i], key));
+		}
+		return list;
+	}
+	if (obj[key]) list.push(obj[key]);
+	if ((typeof obj === "object") && (obj !== null)) {
+		let children = Object.keys(obj);
+		if (children.length > 0) {
+			for (let i = 0; i < children.length; i++) {
+				list = list.concat(this.findKeys(obj[children[i]], key));
+			}
+		}
+	}
+	return list;
+}
+findKeys(exampleObject, 'key15')
 
 
-
+///////////////////////////////////////////////////////////////////////////////////////////
+/////VVV Unsolved yet VVV
 /*
 55 p
 5. Try to implement the functions for which signatures have been provided, as detailed in the instructions.
@@ -195,7 +212,7 @@ function (as if it were properly implemented) in order to implement other functi
  * - Furniture type and Quantity are separated by the "-" character
  */
 //codehere
-// var OrdersString = "Tables-5,Chairs-3,Beds-2;Tables-2,Chairs-5;Tables-3,Chairs-2,Beds-10;Tables-1,Beds-2;Chairs-8,Beds-2"
+var ordersString = "Tables-5,Chairs-3,Beds-2;Tables-2,Chairs-5;Tables-3,Chairs-2,Beds-10;Tables-1,Beds-2;Chairs-8,Beds-2"
 // var StockString = "Tables-15,Chairs-15,Beds-8"
 
 /*
@@ -210,10 +227,28 @@ function (as if it were properly implemented) in order to implement other functi
 // function Order (OrdersString){
 // }
 
-// function Order(orderString){
-// 	var indivOrder = orderString.split(';')
-// 	console.log(indivOrder);
-// }
+//WIP, 
+var objectsList = [];
+function Order(ordersString) {
+
+	var order = ordersString.split(";");
+	var indivOrders = [];
+	console.log(indivOrders)
+	for (var i = 0; i < order.length; i++) {
+		indivOrders.push(order[i].split(","))
+	}
+	console.log(JSON.stringify(indivOrders))
+	for (var j = 0; j < indivOrders.length; j++) {
+		for (var k = 0; k < indivOrders[j].length; k++) {
+			var ordersObj = {};
+			ordersObj['furniture'] = indivOrders[j][0];
+			ordersObj['count'] = indivOrders[j][1];
+			objectsList.push(ordersObj)
+			console.log(ordersObj)
+		}
+	}
+} Order(ordersString)
+//console.log(objectsList)
 
 // Order.prototype.addFurniture = function(furniture, count) {
 // }
