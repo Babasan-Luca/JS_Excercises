@@ -189,7 +189,7 @@ function (as if it were properly implemented) in order to implement other functi
 */
 
 /*
- * Gameloft is opening a furniture shop and already has Orders which need to be processed.
+ * X Company is opening a furniture shop and already has Orders which need to be processed.
  *
  * The goals of this problem are to:
  * 1. Parse OrdersString into an array of Order objects (details below) containing the types and quantities of furniture requested
